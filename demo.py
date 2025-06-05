@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 NUM_COMPONENTS = 10
 NUM_WORKERS = 3
+ONE_COMPONENT = False
 
 api = SI()
 
@@ -75,9 +76,17 @@ def timed_create(i, asset):
 
 
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
-    futures = [
-        executor.submit(timed_create, i, asset_list[i]) for i in range(NUM_COMPONENTS)
-    ]
+    if not ONE_COMPONENT:
+        futures = [
+            executor.submit(timed_create, i, asset_list[i])
+            for i in range(NUM_COMPONENTS)
+        ]
+    else:
+        futures = [
+            executor.submit(timed_create, i, asset_list[40])
+            for i in range(NUM_COMPONENTS)
+        ]
+
     for future in futures:
         times.append(future.result())
 
