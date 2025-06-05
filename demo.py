@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from si_api_demo.util import SI
 import time
 import matplotlib.pyplot as plt
