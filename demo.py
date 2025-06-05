@@ -11,7 +11,9 @@ api = SI()
 
 change_set_name_date = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
 
-change_set_id = api.create_change_set(f"load test-{change_set_name_date}")
+change_set_id = api.create_change_set(
+    f"Load Test {change_set_name_date}: T: {NUM_WORKERS} C: {NUM_COMPONENTS}"
+)
 
 
 def create_asset(name):
