@@ -6,6 +6,10 @@ if not API_TOKEN:
     print("Set SI_API_KEY")
     exit(1)
 
+BASE_URL = os.getenv("SI_BASE_URL")
+if not BASE_URL:
+    BASE_URL = "http://localhost:5380"
+
 DEBUG = 0
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
