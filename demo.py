@@ -1,10 +1,17 @@
 from si_api_demo.util import SI
 import time
 import matplotlib.pyplot as plt
+from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 
+NUM_COMPONENTS = 10
+NUM_WORKERS = 3
 
 api = SI()
-change_set_id = api.create_change_set("load test")
+
+change_set_name_date = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+
+change_set_id = api.create_change_set(f"load test-{change_set_name_date}")
 
 
 def create_asset(name):
@@ -54,19 +61,31 @@ with open("asset_list") as f:
 
 times = []
 
-for i in range(0, 10):
+
+def timed_create(i, asset):
     start = time.time()
     print(f"creating asset #{i}")
-    create_asset(asset_list[i])
+    create_asset(asset)
     end = time.time()
     print(f"Execution time: {(end - start) * 1000:.2f} ms")
     exec_time_ms = (end - start) * 1000
-    times.append(exec_time_ms)
+    return exec_time_ms
+
+
+with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
+    futures = [
+        executor.submit(timed_create, i, asset_list[i]) for i in range(NUM_COMPONENTS)
+    ]
+    for future in futures:
+        times.append(future.result())
+
+
+now = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
 
 plt.plot(times)
-plt.xlabel("Run")
+plt.xlabel("Component")
 plt.ylabel("Execution Time (ms)")
-plt.title("Function Execution Time Over Repeated Runs")
-plt.savefig("execution_times.png")
+plt.title(f"Number of threads: {NUM_WORKERS}, Number of Components: {NUM_COMPONENTS}")
+plt.savefig(f"execution_times-{now}.png")
 
 # api.abandon_change_set()
