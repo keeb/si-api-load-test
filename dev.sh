@@ -3,4 +3,4 @@
 export SI_API_KEY=$(cat key)
 export PYTHONPATH=src
 
-python demo.py
+python demo.py "$@"
