@@ -71,7 +71,7 @@ def create_asset(name):
             },
         ],
     }
-    api.create_component(asset_struct)
+    return api.create_component(asset_struct)
 
 
 # start by aws credential and Region (only if creating new changeset)
@@ -116,11 +116,15 @@ times = []
 def timed_create(i, asset):
     start = time.time()
     print(f"creating asset #{i}")
-    create_asset(asset)
-    end = time.time()
-    print(f"Execution time: {(end - start) * 1000:.2f} ms")
-    exec_time_ms = (end - start) * 1000
-    return exec_time_ms
+    try:
+        create_asset(asset)
+        end = time.time()
+        print(f"Execution time: {(end - start) * 1000:.2f} ms")
+        exec_time_ms = (end - start) * 1000
+        return exec_time_ms
+    except Exception as e:
+        print(f"Error creating asset #{i}: {e}")
+        return e
 
 
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
@@ -136,7 +140,11 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         ]
 
     for future in futures:
-        times.append(future.result())
+        result = future.result()
+        if isinstance(result, Exception):
+            print(f"First error encountered: {result}")
+            exit(1)
+        times.append(result)
 
 
 now = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")

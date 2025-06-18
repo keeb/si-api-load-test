@@ -100,6 +100,9 @@ class SI:
         if DEBUG:
             print(ret.text)
 
+        if not ret.ok:
+            raise Exception(f"Failed to create component: {ret.status_code} - {ret.text}")
+
         return ret.json()
 
     def execute_management_function(self, component_id, management_function_name):
