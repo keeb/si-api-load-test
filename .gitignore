@@ -1,6 +1,8 @@
 .direnv/
 .env
 env
+venv
+execution_times-*.png
 *.pyc
 key
 __pycache__
