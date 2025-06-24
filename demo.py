@@ -46,6 +46,17 @@ else:
     change_set_name = f"Load Test {change_set_name_date}: T: {NUM_WORKERS} C: {NUM_COMPONENTS}"
     change_set_id = api.create_change_set(change_set_name)
 
+subscriptions = {
+    "/domain/extra/Region": {
+        "component": "Demo us-east-1",
+        "propPath": "/domain/region"
+    },
+    "/secrets/AWS Credential": {
+        "component": "Demo Account",
+        "propPath": "/secrets/AWS Credential"
+    }
+}
+
 
 def create_asset(name):
     if "\n" in name:
@@ -54,22 +65,7 @@ def create_asset(name):
     asset_struct = {
         "schemaName": name,
         "name": component_name,
-        "connections": [
-            {
-                "from": {
-                    "component": "Demo Account",
-                    "socketName": "AWS Credential",
-                },
-                "to": "AWS Credential",
-            },
-            {
-                "from": {
-                    "component": "Demo us-east-1",
-                    "socketName": "Region",
-                },
-                "to": "Region",
-            },
-        ],
+        "subscriptions": subscriptions,
     }
     return api.create_component(asset_struct)
 
