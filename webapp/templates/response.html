@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SI App Deployment</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            color: white
+        }
+
+        pre {
+            padding: 1em;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Logged in as</h1>
+    <pre>
+
+user: {{ user.user_id }} 
+email: {{ user.user_email }}
+workspace_id = {{ user.workspace_id }}
+role = {{ user.role }}
+    </pre>
+
+
+<div id="changeset"></div>
+<span>change set: </span><input type="text" id="workspace_id" placeholder="change set name.."><input type="button" value="make it so!">
+</div>
+
+<hr>
+<div id="app">
+    <h2>Docker Image</h2>
+    <input type="text" id="docker_image" placeholder="image"><br>
+    <input type="text" id="docker_port" placeholder="port">
+    <h2>Environment</h2>
+    <select id="environment" style="width: 25%";>
+        <option value="dev">dev</option>
+        <option value="test">test</option>
+        <option value="prod">prod</option>
+    </select>
+    <div>
+        <input type="button" value="TALLY HO!" style="margin-top: 8em;">
+    </div>
+</div>
+
+</body>
+
+</html>

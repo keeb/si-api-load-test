@@ -3,4 +3,5 @@
 env
 *.pyc
 key
+keys/
 __pycache__
