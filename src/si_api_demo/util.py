@@ -10,7 +10,7 @@ BASE_URL = os.getenv("SI_BASE_URL")
 if not BASE_URL:
     BASE_URL = "http://localhost:5380"
 
-DEBUG = 0
+DEBUG = 1
 
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
@@ -71,14 +71,16 @@ class SI:
             f"{self.base_url}/v1/w/{self.session.workspace_id}/change-sets",
             headers=headers,
         )
-        
+
         if DEBUG:
             print(ret.text)
-            
+
         if ret.ok:
             return ret.json()
         else:
-            raise Exception(f"Failed to list change sets: {ret.status_code} - {ret.text}")
+            raise Exception(
+                f"Failed to list change sets: {ret.status_code} - {ret.text}"
+            )
 
     def find_change_set_by_name(self, name):
         change_sets_data = self.list_change_sets()
@@ -101,13 +103,14 @@ class SI:
             print(ret.text)
 
         if not ret.ok:
-            raise Exception(f"Failed to create component: {ret.status_code} - {ret.text}")
+            raise Exception(
+                f"Failed to create component: {ret.status_code} - {ret.text}"
+            )
 
         return ret.json()
 
     def execute_management_function(self, component_id, management_function_name):
         mgmt_function_req = {
-            "viewName": "Demo network",
             "managementFunction": {"function": management_function_name},
         }
         ret = requests.post(
@@ -116,8 +119,12 @@ class SI:
             json=mgmt_function_req,
         )
 
+        data = ret.json()
         if DEBUG:
             print(ret.text)
+            print(data)
+
+        return data["managementFuncJobStateId"]
 
     def delete_change_set(self, change_set_id):
         ret = requests.delete(
@@ -127,6 +134,20 @@ class SI:
 
         if DEBUG:
             print(ret.text)
+
+    def get_logs(self, management_func_id):
+        ret = requests.get(
+            f"{self.base_url}/v1/w/{self.session.workspace_id}/change-sets/{self.change_set_id}/management-funcs/{management_func_id}",
+            headers=headers,
+        )
+
+        if DEBUG:
+            print(ret.text)
+
+        if ret.ok:
+            return ret.json()
+        else:
+            raise Exception(f"Failed to get logs")
 
     def abandon_change_set(self, name=None):
         if not self.change_set_id and not name:

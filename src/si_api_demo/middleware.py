@@ -1,8 +1,21 @@
 from si_api_demo.util import SI
 from time import sleep
+import os
 
-api = SI()
+# Use environment variable for base URL, defaulting to localhost
+base_url = os.getenv("SI_BASE_URL", "http://localhost:5380")
+api = SI(base_url=base_url)
 
+basic_subscriptions = {
+    "/domain/extra/Region": {
+        "component": "Infra us-east-1",
+        "propPath": "/domain/region",
+    },
+    "/secrets/AWS Credential": {
+        "component": "Demo Infra Account",
+        "propPath": "/secrets/AWS Credential",
+    },
+}
 
 basic_connections = [
     {
@@ -68,8 +81,9 @@ def run_and_log(data, func_name):
     sleep(20)
 
     # sleep(5)
-    # logs = api.get_logs(func_run_id)
-    # return logs
+    logs = api.get_logs(func_run_id)
+    print(logs)
+    return logs
     #
 
 

@@ -1,4 +1,3 @@
-from si_api_demo.util import SI
 from si_api_demo.middleware import (
     create_ecs_service,
     create_task_def,
@@ -8,8 +7,6 @@ from si_api_demo.middleware import (
     run_and_log,
     create_cluster,
 )
-
-api = SI()
 
 make_change_set("Infra")
 make_cred_region()

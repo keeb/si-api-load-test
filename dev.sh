@@ -122,7 +122,7 @@ export PYTHONPATH=src
 echo "Running $SCRIPT with environment: $ENV, key: $(basename "$KEY_FILE")"
 if [ -n "$PYTHON_ARGS" ]; then
     echo "Python arguments: $PYTHON_ARGS"
-    python "$SCRIPT" $PYTHON_ARGS
+    python "$SCRIPT" --url "$SI_BASE_URL" $PYTHON_ARGS
 else
-    python "$SCRIPT"
+    python "$SCRIPT" --url "$SI_BASE_URL"
 fi

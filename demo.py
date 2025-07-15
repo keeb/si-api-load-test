@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 import argparse
+import os
 
 def parse_args():
     parser = argparse.ArgumentParser(description='SI API Load Test')
@@ -143,12 +144,16 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         times.append(result)
 
 
+# Create results directory if it doesn't exist
+results_dir = "results"
+os.makedirs(results_dir, exist_ok=True)
+
 now = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
 
 plt.plot(times)
 plt.xlabel("Component")
 plt.ylabel("Execution Time (ms)")
 plt.title(f"Number of threads: {NUM_WORKERS}, Number of Components: {NUM_COMPONENTS}")
-plt.savefig(f"execution_times-{now}.png")
+plt.savefig(f"{results_dir}/execution_times-{now}.png")
 
 # api.abandon_change_set()
